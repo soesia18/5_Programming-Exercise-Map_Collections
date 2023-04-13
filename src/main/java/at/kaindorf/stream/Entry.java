@@ -1,4 +1,4 @@
-package at.kaindorf;
+package at.kaindorf.stream;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

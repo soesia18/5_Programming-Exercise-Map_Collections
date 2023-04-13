@@ -1,6 +1,4 @@
-package at.kaindorf;
-
-import org.w3c.dom.ls.LSOutput;
+package at.kaindorf.stream;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,8 +6,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -36,6 +34,18 @@ public class DayPlanner {
         dayPlanner.loadEntries(file);
         dayPlanner.showAllDays();
         dayPlanner.showEntriesOfDay(LocalDate.of(2019, 10, 18));
+        dayPlanner.showEntriesOfDay(LocalDate.of(2019, 10, 19));
+        System.out.println("------------------");
+        Scanner scanner = new Scanner(System.in);
+
+        try {
+            System.out.println("Enter a date (yyyy-MM-dd): ");
+            String date = scanner.nextLine();
+            LocalDate localDate = LocalDate.parse(date);
+            dayPlanner.showEntriesOfDay(localDate);
+        } catch (DateTimeParseException e) {
+            System.out.println("Invalid date");
+        }
 
         // grouped by years
         /*
@@ -49,7 +59,7 @@ public class DayPlanner {
 
     }
 
-    private void loadEntries(File file) {
+    public void loadEntries(File file) {
         try (Stream<String[]> stream = Files.lines(file.toPath()).skip(1).map(line -> line.split(","))) {
             stream.forEach(split -> {
                 LocalDate date = LocalDate.parse(split[0]);
@@ -62,7 +72,7 @@ public class DayPlanner {
         }
     }
 
-    private void addEntry(LocalDate date, Entry entry) {
+    public void addEntry(LocalDate date, Entry entry) {
         /*map.computeIfPresent(date, (key, value) -> {
             value.add(entry);
             return value;
@@ -90,7 +100,7 @@ public class DayPlanner {
         });
     }
 
-    private void showEntriesOfDay(LocalDate date) {
+    public void showEntriesOfDay(LocalDate date) {
         if (map.containsKey(date)) {
             System.out.println("<" + date + ">");
             map.get(date).forEach(System.out::println);
@@ -99,7 +109,7 @@ public class DayPlanner {
         }
     }
 
-    private void showAllDays() {
+    public void showAllDays() {
         System.out.println("Datum\t\tEinträge");
         System.out.println("------------------------------");
         map.forEach((date, entries) -> {
